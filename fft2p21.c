@@ -166,7 +166,8 @@ int main(int argc, char **argv)
                 }
                 j = j * 2;
             }
-
+            
+            printf("%d: size =  %ld, fraction = %d\n", p_rank, size, j);
             fastFourierTransformSlave(size, p_rank, j);
         }
     
