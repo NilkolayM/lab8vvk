@@ -117,7 +117,7 @@ void fastFourierTransformSlave(long pLength, int p_rank, int current_fraction)
         fastFourierTransform(polynom, pLength);
     } else 
             {
-                fastFourierTransformMaster(polynom, pLength, p_rank, current_fraction / 2);
+                fastFourierTransformMaster(polynom, pLength, p_rank, current_fraction);
             }
 
     MPI_Send(polynom, pLength * 2, MPI_DOUBLE, p_rank - current_fraction, MPI_FFT_GET_RESULT, MPI_COMM_WORLD);
@@ -126,9 +126,6 @@ void fastFourierTransformSlave(long pLength, int p_rank, int current_fraction)
 }
 
 #define m_printf if (p_rank==0)printf
-//16777216
-//8388608
-//4194304
 #define L 2097152
 //1048576
 //524288
@@ -137,7 +134,7 @@ void fastFourierTransformSlave(long pLength, int p_rank, int current_fraction)
 int main(int argc, char **argv)
 {
     int p_rank, ranksize;
-    double t1;
+    double t1, t2;
     MPI_Init (&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &p_rank);
     MPI_Comm_size (MPI_COMM_WORLD, &ranksize);
@@ -159,19 +156,16 @@ int main(int argc, char **argv)
             int j = 1;
             for (int i = 2; i < ranksize; i = i * 2) 
             {
-                if ((p_rank % i) == j)
-                {
-                    size = L / (ranksize / j);
-                    break;
-                }
+                if ((p_rank % i) == j) break;
+                size = size * 2;
                 j = j * 2;
             }
-            
-            printf("%d: size =  %ld, fraction = %d\n", p_rank, size, j);
+
             fastFourierTransformSlave(size, p_rank, j);
         }
     
-    printf("%d: Time of task=%lf\n", p_rank, MPI_Wtime() - t1);
+    MPI_Barrier(MPI_COMM_WORLD);
+    m_printf("Runtime = %lf\n", MPI_Wtime() - t1);
     MPI_Finalize ();
     return 0;
 }

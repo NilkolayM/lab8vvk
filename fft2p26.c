@@ -126,13 +126,7 @@ void fastFourierTransformSlave(long pLength, int p_rank, int current_fraction)
 }
 
 #define m_printf if (p_rank==0)printf
-#define L 16777216
-//8388608
-//4194304
-//2097152
-//1048576
-//524288
-//262144
+#define L 67108864
 
 int main(int argc, char **argv)
 {
