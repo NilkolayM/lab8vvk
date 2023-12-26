@@ -151,6 +151,7 @@ int main(int argc, char **argv)
     {
         double* data = (double*)malloc(L * 2 * sizeof(double));
         fastFourierTransformMaster(data, L, p_rank, ranksize);
+        free(data);
     }
     else 
         {
