@@ -179,9 +179,12 @@ int main(int argc, char **argv)
                 }
             
             t2 = MPI_Wtime() - t1;
-            m_printf("Runtime = %lf\n", t2);
+            avg_time = avg_time + t2;
+            m_printf("Size = %ld, Iteration = %d, Runtime = %lf\n", host_size, iteration, t2);
             MPI_Barrier(MPI_COMM_WORLD);
         }
+
+        avg_time = avg_time / 256;
     }
 
     MPI_Finalize ();
