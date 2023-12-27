@@ -138,9 +138,11 @@ int main(int argc, char **argv)
 
     m_printf("Programm started\n");
 
-    for(long host_size = 65536; host_size < 33554432; host_size = host_size * 2) 
+    for(long host_size = 256; host_size < 10000000; host_size = host_size * 2) 
     {
-        for (int iteration = 0; iteration < 100; iteration++) 
+        double avg_time = 0.;
+        
+        for (int iteration = 0; iteration < 256; iteration++) 
         {
             t1 = MPI_Wtime();
     
