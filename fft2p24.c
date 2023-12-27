@@ -166,9 +166,8 @@ int main(int argc, char **argv)
                 }
             
             t2 = MPI_Wtime() - t1;
-            MPI_Barrier(MPI_COMM_WORLD);
             m_printf("Runtime = %lf\n", t2);
-            
+            MPI_Barrier(MPI_COMM_WORLD);
         }
     }
 
