@@ -147,7 +147,18 @@ int main(int argc, char **argv)
             if (p_rank == 0) 
             {
                 double* data = (double*)malloc(host_size * 2 * sizeof(double));
-                fastFourierTransformMaster(data, host_size, p_rank, ranksize);
+
+                switch (ranksize) 
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        fastFourierTransform(data, host_size);
+                        break;
+                    default:
+                        fastFourierTransformMaster(data, host_size, p_rank, ranksize);
+                }                
+                
                 free(data);
             }
             else 
