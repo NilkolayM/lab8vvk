@@ -126,13 +126,6 @@ void fastFourierTransformSlave(long pLength, int p_rank, int current_fraction)
 }
 
 #define m_printf if (p_rank==0)printf
-#define L 16777216
-//8388608
-//4194304
-//2097152
-//1048576
-//524288
-//262144
 
 int main(int argc, char **argv)
 {
@@ -145,6 +138,11 @@ int main(int argc, char **argv)
 
     m_printf("Programm started\n");
 
+    for(long host_size = 65536; host_size < 33554432; host_size = host_size * 2) 
+    {
+        
+    }
+    
     t1 = MPI_Wtime();
 
     if (p_rank == 0) 
