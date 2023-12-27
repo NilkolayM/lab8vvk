@@ -180,11 +180,12 @@ int main(int argc, char **argv)
             
             t2 = MPI_Wtime() - t1;
             avg_time = avg_time + t2;
-            m_printf("Size = %ld, Iteration = %d, Runtime = %lf\n", host_size, iteration, t2);
+            m_printf("\tSize = %ld,\tIteration = %d,\tRuntime = %lf\n", host_size, iteration, t2);
             MPI_Barrier(MPI_COMM_WORLD);
         }
 
         avg_time = avg_time / 256;
+        m_printf("Size = %ld,\tAverage runtime = %lf\n", host_size, avg_time);
     }
 
     MPI_Finalize ();
