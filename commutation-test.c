@@ -87,7 +87,7 @@ int main(int argc, char **argv)
         {
             fputs(result_string, fp);
             fclose(fp);
-            printf("DONE : results-comm-test.txt");
+            printf("DONE : results-comm-test.txt\n");
         }
     }
 

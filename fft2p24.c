@@ -219,7 +219,7 @@ int main(int argc, char **argv)
         {
             fputs(result_string, fp);
             fclose(fp);
-            printf("DONE : results-np-%d.txt", ranksize);
+            printf("DONE : results-np-%d.txt\n", ranksize);
         }
     }
 
