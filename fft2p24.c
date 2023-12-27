@@ -140,34 +140,34 @@ int main(int argc, char **argv)
 
     for(long host_size = 65536; host_size < 33554432; host_size = host_size * 2) 
     {
-        
-    }
+        t1 = MPI_Wtime();
     
-    t1 = MPI_Wtime();
-
-    if (p_rank == 0) 
-    {
-        double* data = (double*)malloc(L * 2 * sizeof(double));
-        fastFourierTransformMaster(data, L, p_rank, ranksize);
-        free(data);
-    }
-    else 
+        if (p_rank == 0) 
         {
-            long size = L / ranksize;
-
-            int j = 1;
-            for (int i = 2; i < ranksize; i = i * 2) 
-            {
-                if ((p_rank % i) == j) break;
-                size = size * 2;
-                j = j * 2;
-            }
-
-            fastFourierTransformSlave(size, p_rank, j);
+            double* data = (double*)malloc(host_size * 2 * sizeof(double));
+            fastFourierTransformMaster(data, host_size, p_rank, ranksize);
+            free(data);
         }
+        else 
+            {
+                long size = host_size / ranksize;
     
-    MPI_Barrier(MPI_COMM_WORLD);
-    m_printf("Runtime = %lf\n", MPI_Wtime() - t1);
+                int j = 1;
+                for (int i = 2; i < ranksize; i = i * 2) 
+                {
+                    if ((p_rank % i) == j) break;
+                    size = size * 2;
+                    j = j * 2;
+                }
+    
+                fastFourierTransformSlave(size, p_rank, j);
+            }
+        
+        t2 = MPI_Wtime() - t1;
+        MPI_Barrier(MPI_COMM_WORLD);
+        m_printf("Runtime = %lf\n", t2);   
+    }
+
     MPI_Finalize ();
     return 0;
 }
