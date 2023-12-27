@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     MPI_Comm_size (MPI_COMM_WORLD, &ranksize);
     MPI_Barrier(MPI_COMM_WORLD);
 
-    m_printf("Programm started\n");
+    if (p_rank == 0) printf("Programm started\n");
 
     int ri = 0;
 
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
         {
             avg_time = avg_time / 256;
             sprintf(results[ri], "Size = %ld,\tAverage runtime = %.8lf\n", host_size, avg_time);
-            printf(results[ri]);
+            printf( "%s", results[ri]);
             ri++;
         }
         
