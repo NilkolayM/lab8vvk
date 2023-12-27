@@ -11,7 +11,7 @@ int main(int argc, char **argv)
     int p_rank, ranksize;
     double t1, t2;
     char results[19][100];
-    char result_string[1600];
+    char result_string[1900];
     MPI_Init (&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &p_rank);
     MPI_Comm_size (MPI_COMM_WORLD, &ranksize);
@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 
     if (p_rank == 0) 
     {
-        snprintf(result_string, 1600, "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", 
+        snprintf(result_string, 1900, "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", 
                     results[0], results[1], results[2], results[3], 
                     results[4], results[5], results[6], results[7],
                     results[8], results[9], results[10], results[11], 
