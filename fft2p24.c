@@ -137,7 +137,7 @@ int main(int argc, char **argv)
     MPI_Barrier(MPI_COMM_WORLD);
 
     m_printf("Programm started\n");
-
+    //16 - 4194304
     for(long host_size = 256; host_size < 10000000; host_size = host_size * 2) 
     {
         double avg_time = 0.;
