@@ -125,18 +125,20 @@ void fastFourierTransformSlave(long pLength, int p_rank, int current_fraction)
     free(polynom);
 }
 
-#define m_printf if (p_rank==0)printf
-
 int main(int argc, char **argv)
 {
     int p_rank, ranksize;
     double t1, t2;
+    char results[16][100];
+    char result_string[1600];
     MPI_Init (&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &p_rank);
     MPI_Comm_size (MPI_COMM_WORLD, &ranksize);
     MPI_Barrier(MPI_COMM_WORLD);
 
     m_printf("Programm started\n");
+
+    int ri = 0;
     //16 - 4194304
     for(long host_size = 256; host_size < 10000000; host_size = host_size * 2) 
     {
@@ -144,11 +146,12 @@ int main(int argc, char **argv)
         
         for (int iteration = 0; iteration < 256; iteration++) 
         {
-            t1 = MPI_Wtime();
-    
+            
             if (p_rank == 0) 
             {
                 double* data = (double*)malloc(host_size * 2 * sizeof(double));
+                
+                t1 = MPI_Wtime();
 
                 switch (ranksize) 
                 {
@@ -161,7 +164,12 @@ int main(int argc, char **argv)
                         fastFourierTransformMaster(data, host_size, p_rank, ranksize);
                 }                
                 
+                t2 = MPI_Wtime() - t1;
+
                 free(data);
+                
+                avg_time = avg_time + t2;
+                printf("\tSize = %ld,\tIteration = %d,\tRuntime = %.8lf\n", host_size, iteration, t2);
             }
             else 
                 {
@@ -178,15 +186,41 @@ int main(int argc, char **argv)
                     fastFourierTransformSlave(size, p_rank, j);
                 }
             
-            t2 = MPI_Wtime() - t1;
-            avg_time = avg_time + t2;
-            m_printf("\tSize = %ld,\tIteration = %d,\tRuntime = %lf\n", host_size, iteration, t2);
+            
             MPI_Barrier(MPI_COMM_WORLD);
         }
 
-        avg_time = avg_time / 256;
-        m_printf("Size = %ld,\tAverage runtime = %lf\n", host_size, avg_time);
+        if (p_rank == 0) 
+        {
+            avg_time = avg_time / 256;
+            sprintf(results[ri], "Size = %ld,\tAverage runtime = %.8lf\n", host_size, avg_time);
+            printf(results[ri]);
+            ri++;
+        }
+        
         MPI_Barrier(MPI_COMM_WORLD);
+    }
+
+    if (p_rank == 0) 
+    {
+        snprintf(result_string, 1600, "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", 
+                    results[0], results[1], results[2], results[3], 
+                    results[4], results[5], results[6], results[7],
+                    results[8], results[9], results[10], results[11], 
+                    results[12], results[13], results[14], results[15]);
+        
+        char file_name[50];
+
+        sprintf(file_name, "results-np-%d.txt", ranksize);
+
+        FILE* fp = fopen(file_name, "w");
+
+        if(fp)
+        {
+            fputs(result_string, fp);
+            fclose(fp);
+            printf("DONE : results-np-%d.txt", ranksize);
+        }
     }
 
     MPI_Finalize ();
