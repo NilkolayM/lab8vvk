@@ -186,6 +186,7 @@ int main(int argc, char **argv)
 
         avg_time = avg_time / 256;
         m_printf("Size = %ld,\tAverage runtime = %lf\n", host_size, avg_time);
+        MPI_Barrier(MPI_COMM_WORLD);
     }
 
     MPI_Finalize ();
